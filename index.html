@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ultimate Frisbee Score Submission</title>
+  <title>Ultimate Frisbee Score Sheet</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -16,19 +16,28 @@
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      max-width: 400px;
+      max-width: 600px;
       margin: auto;
     }
     h2 {
       text-align: center;
     }
-    label {
-      display: block;
-      margin-bottom: 5px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
     }
     input[type="text"],
     input[type="number"] {
-      width: 100%;
+      width: 90%;
       padding: 8px;
       margin-bottom: 10px;
       border: 1px solid #ccc;
@@ -50,37 +59,90 @@
 </head>
 <body>
   <div class="form-container">
-    <h2>Ultimate Frisbee Score Submission</h2>
+    <h2>Stellenbosch Ultimate Frisbee League Score Sheet</h2>
     <form id="scoreForm">
-      <label for="gameId">Game ID:</label>
-      <input type="text" id="gameId" required>
+      <!-- Description Table -->
+      <table>
+        <tr>
+          <th>Team A</th>
+          <td><input type="text" id="teamA" required></td>
+        </tr>
+        <tr>
+          <th>Team B</th>
+          <td><input type="text" id="teamB" required></td>
+        </tr>
+        <tr>
+          <th>Time</th>
+          <td><input type="text" id="time" value="" readonly></td>
+        </tr>
+      </table>
 
-      <label for="team1">Team 1:</label>
-      <input type="text" id="team1" required>
+      <!-- Scoring Table -->
+      <table>
+        <tr>
+          <th>Score A</th>
+          <th>Assist A</th>
+          <th>Total</th>
+          <th>Score B</th>
+          <th>Assist B</th>
+        </tr>
+        <!-- 30 Blank Rows for Scoring -->
+        <script>
+          for (let i = 0; i < 30; i++) {
+            document.write('<tr>');
+            document.write('<td><input type="number" class="scoreA"></td>');
+            document.write('<td><input type="number" class="assistA"></td>');
+            document.write('<td></td>');
+            document.write('<td><input type="number" class="scoreB"></td>');
+            document.write('<td><input type="number" class="assistB"></td>');
+            document.write('</tr>');
+          }
+        </script>
+      </table>
 
-      <label for="team2">Team 2:</label>
-      <input type="text" id="team2" required>
-
-      <label for="score1">Score Team 1:</label>
-      <input type="number" id="score1" required>
-
-      <label for="score2">Score Team 2:</label>
-      <input type="number" id="score2" required>
+      <!-- Team List Table -->
+      <table>
+        <tr>
+          <th>Team A</th>
+          <th>Team B</th>
+        </tr>
+        <tr>
+          <td><input type="text" id="teamAList" required></td>
+          <td><input type="text" id="teamBList" required></td>
+        </tr>
+      </table>
 
       <input type="button" value="Submit" onclick="submitScore()">
     </form>
   </div>
 
   <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById('time').value = new Date().toLocaleString();
+    });
+
     async function submitScore() {
       const url = 'YOUR_WEB_APP_URL_HERE'; // Replace with the URL of your deployed Google Apps Script web app
       const data = {
-        gameId: document.getElementById('gameId').value,
-        team1: document.getElementById('team1').value,
-        team2: document.getElementById('team2').value,
-        score1: parseInt(document.getElementById('score1').value),
-        score2: parseInt(document.getElementById('score2').value)
+        teamA: document.getElementById('teamA').value,
+        teamB: document.getElementById('teamB').value,
+        time: document.getElementById('time').value,
+        scores: []
       };
+
+      const scoreARows = document.getElementsByClassName('scoreA');
+      const assistARows = document.getElementsByClassName('assistA');
+      const scoreBRows = document.getElementsByClassName('scoreB');
+      const assistBRows = document.getElementsByClassName('assistB');
+
+      for (let i = 0; i < 30; i++) {
+        data.scores.push({
+          scoreA: parseInt(scoreARows[i].value) || 0,
+          assistA: parseInt(assistARows[i].value) || 0,
+          scoreB: parseInt(scoreBRows[i].value) || 0,
+          assistB: parseInt(assistBRows[i].value) || 0,
+        });
+      }
 
       try {
         const response = await fetch(url, {
