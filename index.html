@@ -131,10 +131,9 @@
     });
 
     async function fetchTeams() {
-      const url = 'https://script.google.com/macros/s/AKfycbyfXjCSE_9_qo8Ix7cfdf3WaLwxD1Uiyu_gJPUtOLKShAbMdis1ooQd3Sx5rYMlbWf2/exec'; 
-      // Replace with the URL of your deployed Google Apps Script web app
+      const url = 'https://script.google.com/macros/s/AKfycbyfXjCSE_9_qo8Ix7cfdf3WaLwxD1Uiyu_gJPUtOLKShAbMdis1ooQd3Sx5rYMlbWf2/exec'; // Replace with the URL of your deployed Google Apps Script web app
 
-      try {
+      try { 
         const response = await fetch(url);
         const teams = await response.json();
 
@@ -159,8 +158,7 @@
     }
 
     async function submitScore() {
-      const url = 'https://script.google.com/macros/s/AKfycbyfXjCSE_9_qo8Ix7cfdf3WaLwxD1Uiyu_gJPUtOLKShAbMdis1ooQd3Sx5rYMlbWf2/exec'; 
-      // Replace with the URL of your deployed Google Apps Script web app
+      const url = 'https://script.google.com/macros/s/AKfycbyfXjCSE_9_qo8Ix7cfdf3WaLwxD1Uiyu_gJPUtOLKShAbMdis1ooQd3Sx5rYMlbWf2/exec'; // Replace with the URL of your deployed Google Apps Script web app
       const data = {
         teamA: document.getElementById('teamA').value,
         teamB: document.getElementById('teamB').value,
