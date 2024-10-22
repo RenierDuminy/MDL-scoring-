@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultimate Frisbee Score Submission</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+    .form-container {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    input[type="button"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    input[type="button"]:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Ultimate Frisbee Score Submission</h2>
+    <form id="scoreForm">
+      <label for="gameId">Game ID:</label>
+      <input type="text" id="gameId" required>
+
+      <label for="team1">Team 1:</label>
+      <input type="text" id="team1" required>
+
+      <label for="team2">Team 2:</label>
+      <input type="text" id="team2" required>
+
+      <label for="score1">Score Team 1:</label>
+      <input type="number" id="score1" required>
+
+      <label for="score2">Score Team 2:</label>
+      <input type="number" id="score2" required>
+
+      <input type="button" value="Submit" onclick="submitScore()">
+    </form>
+  </div>
+
+  <script>
+    async function submitScore() {
+      const url = 'YOUR_WEB_APP_URL_HERE'; // Replace with the URL of your deployed Google Apps Script web app
+      const data = {
+        gameId: document.getElementById('gameId').value,
+        team1: document.getElementById('team1').value,
+        team2: document.getElementById('team2').value,
+        score1: parseInt(document.getElementById('score1').value),
+        score2: parseInt(document.getElementById('score2').value)
+      };
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        alert(result.status);
+      } catch (error) {
+        alert('Error submitting score: ' + error.message);
+      }
+    }
+  </script>
+</body>
+</html>
