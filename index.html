@@ -111,12 +111,12 @@
       <!-- Team List Table -->
       <table>
         <tr>
-          <th>Team A</th>
-          <th>Team B</th>
+          <th>Team A Players</th>
+          <th>Team B Players</th>
         </tr>
         <tr>
-          <td><input type="text" id="teamAList" required></td>
-          <td><input type="text" id="teamBList" required></td>
+          <td><textarea id="teamAList" rows="5" readonly></textarea></td>
+          <td><textarea id="teamBList" rows="5" readonly></textarea></td>
         </tr>
       </table>
 
@@ -137,6 +137,9 @@
         const response = await fetch(url);
         const teams = await response.json();
 
+        // Store teams data in session storage
+        sessionStorage.setItem('teams', JSON.stringify(teams));
+
         const teamASelect = document.getElementById('teamA');
         const teamBSelect = document.getElementById('teamB');
 
@@ -150,9 +153,23 @@
           teamASelect.appendChild(option);
           teamBSelect.appendChild(option.cloneNode(true));
         });
+
+        // Add event listeners to update player lists when teams are selected
+        teamASelect.addEventListener('change', () => updatePlayerList('teamA'));
+        teamBSelect.addEventListener('change', () => updatePlayerList('teamB'));
       } catch (error) {
         console.error('Error fetching team names:', error);
       }
+    }
+
+    function updatePlayerList(team) {
+      const teams = JSON.parse(sessionStorage.getItem('teams'));
+      const selectedTeam = document.getElementById(team).value;
+      const playerListElement = document.getElementById(team + 'List');
+
+      // Filter players based on the selected team
+      const players = teams.filter(item => item.teamA === selectedTeam).map((item, index) => `${index + 1} - ${item.teamB}`);
+      playerListElement.value = players.join('\n');
     }
 
     async function submitScore() {
