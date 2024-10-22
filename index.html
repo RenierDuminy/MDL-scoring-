@@ -95,17 +95,7 @@
           <th>Assist B</th>
         </tr>
         <!-- 30 Blank Rows for Scoring -->
-        <script>
-          for (let i = 0; i < 30; i++) {
-            document.write('<tr>');
-            document.write('<td><input type="number" class="scoreA"></td>');
-            document.write('<td><input type="number" class="assistA"></td>');
-            document.write('<td></td>');
-            document.write('<td><input type="number" class="scoreB"></td>');
-            document.write('<td><input type="number" class="assistB"></td>');
-            document.write('</tr>');
-          }
-        </script>
+        <tbody id="scoringTableBody"></tbody>
       </table>
 
       <!-- Team List Table -->
@@ -125,13 +115,13 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", () => {
       document.getElementById('time').value = new Date().toLocaleString();
       fetchTeams();
     });
 
     async function fetchTeams() {
-      const url = 'https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec'; // Replace with the URL of your deployed Google Apps Script web app
+      const url = 'https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec';
 
       try { 
         const response = await fetch(url);
@@ -140,40 +130,69 @@
         // Store teams data in session storage
         sessionStorage.setItem('teams', JSON.stringify(teams));
 
-        const teamASelect = document.getElementById('teamA');
-        const teamBSelect = document.getElementById('teamB');
-
-        // Extract unique team names from the first column (teamA)
-        const uniqueTeams = [...new Set(teams.map(item => item.teamA))];
-
-        uniqueTeams.forEach(team => {
-          const option = document.createElement('option');
-          option.value = team;
-          option.textContent = team;
-          teamASelect.appendChild(option);
-          teamBSelect.appendChild(option.cloneNode(true));
-        });
-
-        // Add event listeners to update player lists when teams are selected
-        teamASelect.addEventListener('change', () => updatePlayerList('teamA'));
-        teamBSelect.addEventListener('change', () => updatePlayerList('teamB'));
+        populateTeamOptions(teams);
       } catch (error) {
         console.error('Error fetching team names:', error);
       }
     }
 
+    function populateTeamOptions(teams) {
+      const teamASelect = document.getElementById('teamA');
+      const teamBSelect = document.getElementById('teamB');
+
+      // Extract unique team names from the first column (teamA)
+      const uniqueTeams = [...new Set(teams.map(item => item.teamA))];
+
+      uniqueTeams.forEach(team => {
+        const option = new Option(team, team);
+        teamASelect.add(option.cloneNode(true));
+        teamBSelect.add(option.cloneNode(true));
+      });
+
+      // Add event listeners to update player lists when teams are selected
+      teamASelect.addEventListener('change', () => updatePlayerList('teamA'));
+      teamBSelect.addEventListener('change', () => updatePlayerList('teamB'));
+    }
+
     function updatePlayerList(team) {
       const teams = JSON.parse(sessionStorage.getItem('teams'));
       const selectedTeam = document.getElementById(team).value;
-      const playerListElement = document.getElementById(team + 'List');
+      const playerListElement = document.getElementById(`${team}List`);
 
       // Filter players based on the selected team
       const players = teams.filter(item => item.teamA === selectedTeam).map((item, index) => `${index + 1} - ${item.teamB}`);
       playerListElement.value = players.join('\n');
+
+      // Update scoring dropdowns
+      updateScoringDropdowns();
+    }
+
+    function updateScoringDropdowns() {
+      const teams = JSON.parse(sessionStorage.getItem('teams'));
+      const teamAPlayers = document.getElementById('teamA').value;
+      const teamBPlayers = document.getElementById('teamB').value;
+
+      const teamAList = teams.filter(item => item.teamA === teamAPlayers).map((item, index) => `${index + 1} - ${item.teamB}`);
+      const teamBList = teams.filter(item => item.teamA === teamBPlayers).map((item, index) => `${index + 1} - ${item.teamB}`);
+
+      const scoringTableBody = document.getElementById('scoringTableBody');
+      scoringTableBody.innerHTML = '';
+
+      for (let i = 0; i < 30; i++) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><select class="scoreA"><option value="">Select Player</option>${teamAList.map(player => `<option value="${player}">${player}</option>`).join('')}</select></td>
+          <td><select class="assistA"><option value="">Select Player</option>${teamAList.map(player => `<option value="${player}">${player}</option>`).join('')}</select></td>
+          <td></td>
+          <td><select class="scoreB"><option value="">Select Player</option>${teamBList.map(player => `<option value="${player}">${player}</option>`).join('')}</select></td>
+          <td><select class="assistB"><option value="">Select Player</option>${teamBList.map(player => `<option value="${player}">${player}</option>`).join('')}</select></td>
+        `;
+        scoringTableBody.appendChild(row);
+      }
     }
 
     async function submitScore() {
-      const url = 'https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec'; // Replace with the URL of your deployed Google Apps Script web app
+      const url = 'https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec';
       const data = {
         teamA: document.getElementById('teamA').value,
         teamB: document.getElementById('teamB').value,
@@ -186,12 +205,12 @@
       const scoreBRows = document.getElementsByClassName('scoreB');
       const assistBRows = document.getElementsByClassName('assistB');
 
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < scoreARows.length; i++) {
         data.scores.push({
-          scoreA: parseInt(scoreARows[i].value) || 0,
-          assistA: parseInt(assistARows[i].value) || 0,
-          scoreB: parseInt(scoreBRows[i].value) || 0,
-          assistB: parseInt(assistBRows[i].value) || 0,
+          scoreA: scoreARows[i].value || "",
+          assistA: assistARows[i].value || "",
+          scoreB: scoreBRows[i].value || "",
+          assistB: assistBRows[i].value || "",
         });
       }
 
