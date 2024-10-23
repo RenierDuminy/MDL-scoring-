@@ -9,11 +9,11 @@
       font-family: Arial, sans-serif;
       background-color: #f0f0f0;
       margin: 0;
-      padding: 20px;
+      padding: 10px;
     }
     .form-container {
       background-color: #ffffff;
-      padding: 20px;
+      padding: 10px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       max-width: 600px;
@@ -35,8 +35,7 @@
     th {
       background-color: #f2f2f2;
     }
-    select,
-    input[type="number"] {
+    select {
       width: 90%;
       padding: 8px;
       margin-bottom: 10px;
@@ -54,6 +53,10 @@
     }
     input[type="button"]:hover {
       background-color: #45a049;
+    }
+    .locked {
+      background-color: #a9a9a9;
+      pointer-events: none;
     }
   </style>
 </head>
@@ -94,7 +97,6 @@
           <th>Score B</th>
           <th>Assist B</th>
         </tr>
-        <!-- 30 Blank Rows for Scoring -->
         <tbody id="scoringTableBody"></tbody>
       </table>
 
@@ -118,18 +120,14 @@
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById('time').value = new Date().toLocaleString();
       fetchTeams();
+      addScoringRow();
     });
 
     async function fetchTeams() {
-      const url = 'https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec';
-
       try { 
-        const response = await fetch(url);
+        const response = await fetch('https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec');
         const teams = await response.json();
-
-        // Store teams data in session storage
         sessionStorage.setItem('teams', JSON.stringify(teams));
-
         populateTeamOptions(teams);
       } catch (error) {
         console.error('Error fetching team names:', error);
@@ -139,17 +137,14 @@
     function populateTeamOptions(teams) {
       const teamASelect = document.getElementById('teamA');
       const teamBSelect = document.getElementById('teamB');
-
-      // Extract unique team names from the first column (teamA)
       const uniqueTeams = [...new Set(teams.map(item => item.teamA))];
 
       uniqueTeams.forEach(team => {
         const option = new Option(team, team);
-        teamASelect.add(option.cloneNode(true));
+        teamASelect.add(option);
         teamBSelect.add(option.cloneNode(true));
       });
 
-      // Add event listeners to update player lists when teams are selected
       teamASelect.addEventListener('change', () => updatePlayerList('teamA'));
       teamBSelect.addEventListener('change', () => updatePlayerList('teamB'));
     }
@@ -158,64 +153,91 @@
       const teams = JSON.parse(sessionStorage.getItem('teams'));
       const selectedTeam = document.getElementById(team).value;
       const playerListElement = document.getElementById(`${team}List`);
-
-      // Filter players based on the selected team
       const players = teams.filter(item => item.teamA === selectedTeam).map((item, index) => `${index + 1} - ${item.teamB}`);
       playerListElement.value = players.join('\n');
-
-      // Update scoring dropdowns
       updateScoringDropdowns();
+    }
+
+    function addScoringRow() {
+      const scoringTableBody = document.getElementById('scoringTableBody');
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><select class="scoreA"><option value="">Select Player</option></select></td>
+        <td><select class="assistA"><option value="">Select Player</option></select></td>
+        <td class="total">0 : 0</td>
+        <td><select class="scoreB"><option value="">Select Player</option></select></td>
+        <td><select class="assistB"><option value="">Select Player</option></select></td>
+      `;
+      scoringTableBody.appendChild(row);
+      row.addEventListener('change', handleRowChange);
     }
 
     function updateScoringDropdowns() {
       const teams = JSON.parse(sessionStorage.getItem('teams'));
       const teamAPlayers = document.getElementById('teamA').value;
       const teamBPlayers = document.getElementById('teamB').value;
-
       const teamAList = teams.filter(item => item.teamA === teamAPlayers).map((item, index) => `${index + 1} - ${item.teamB}`);
       const teamBList = teams.filter(item => item.teamA === teamBPlayers).map((item, index) => `${index + 1} - ${item.teamB}`);
 
-      const scoringTableBody = document.getElementById('scoringTableBody');
-      scoringTableBody.innerHTML = '';
+      document.querySelectorAll('.scoreA, .assistA').forEach(dropdown => updateDropdownOptions(dropdown, teamAList));
+      document.querySelectorAll('.scoreB, .assistB').forEach(dropdown => updateDropdownOptions(dropdown, teamBList));
+    }
 
-      for (let i = 0; i < 30; i++) {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><select class="scoreA"><option value="">Select Player</option>${teamAList.map(player => `<option value="${player}">${player}</option>`).join('')}</select></td>
-          <td><select class="assistA"><option value="">Select Player</option>${teamAList.map(player => `<option value="${player}">${player}</option>`).join('')}</select></td>
-          <td></td>
-          <td><select class="scoreB"><option value="">Select Player</option>${teamBList.map(player => `<option value="${player}">${player}</option>`).join('')}</select></td>
-          <td><select class="assistB"><option value="">Select Player</option>${teamBList.map(player => `<option value="${player}">${player}</option>`).join('')}</select></td>
-        `;
-        scoringTableBody.appendChild(row);
+    function updateDropdownOptions(dropdown, options) {
+      dropdown.innerHTML = '<option value="">Select Player</option>';
+      options.forEach(option => {
+        dropdown.innerHTML += `<option value="${option}">${option}</option>`;
+      });
+    }
+
+    function handleRowChange(e) {
+      if (e.target.tagName === 'SELECT' && e.target.value) {
+        const row = e.target.closest('tr');
+        const scoreA = row.querySelector('.scoreA').value;
+        const assistA = row.querySelector('.assistA').value;
+        const scoreB = row.querySelector('.scoreB').value;
+        const assistB = row.querySelector('.assistB').value;
+
+        if ((scoreA && assistA) || (scoreB && assistB)) {
+          const totalCell = row.querySelector('.total');
+          let [currentScoreA, currentScoreB] = totalCell.textContent.split(':').map(Number);
+
+          if (scoreA && assistA) {
+            currentScoreA++;
+            lockCells(row, '.scoreB', '.assistB');
+          } else if (scoreB && assistB) {
+            currentScoreB++;
+            lockCells(row, '.scoreA', '.assistA');
+          }
+
+          totalCell.textContent = `${currentScoreA} : ${currentScoreB}`;
+          addScoringRow();
+        }
       }
     }
 
+    function lockCells(row, scoreClass, assistClass) {
+      row.querySelectorAll(scoreClass + ', ' + assistClass).forEach(cell => {
+        cell.classList.add('locked');
+      });
+    }
+
     async function submitScore() {
-      const url = 'https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec';
-      const data = {
-        teamA: document.getElementById('teamA').value,
-        teamB: document.getElementById('teamB').value,
-        time: document.getElementById('time').value,
-        scores: []
-      };
-
-      const scoreARows = document.getElementsByClassName('scoreA');
-      const assistARows = document.getElementsByClassName('assistA');
-      const scoreBRows = document.getElementsByClassName('scoreB');
-      const assistBRows = document.getElementsByClassName('assistB');
-
-      for (let i = 0; i < scoreARows.length; i++) {
-        data.scores.push({
-          scoreA: scoreARows[i].value || "",
-          assistA: assistARows[i].value || "",
-          scoreB: scoreBRows[i].value || "",
-          assistB: assistBRows[i].value || "",
-        });
-      }
-
       try {
-        const response = await fetch(url, {
+        const data = {
+          teamA: document.getElementById('teamA').value,
+          teamB: document.getElementById('teamB').value,
+          time: document.getElementById('time').value,
+          scores: Array.from(document.querySelectorAll('#scoringTableBody tr')).map(row => ({
+            scoreA: row.querySelector('.scoreA').value || "",
+            assistA: row.querySelector('.assistA').value || "",
+            scoreB: row.querySelector('.scoreB').value || "",
+            assistB: row.querySelector('.assistB').value || "",
+            total: row.querySelector('.total').textContent
+          }))
+        };
+
+        const response = await fetch('https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
