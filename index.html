@@ -7,20 +7,32 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      background-color: #f7f3f0;
       margin: 0;
       padding: 10px;
     }
     .form-container {
       background-color: #ffffff;
-      padding: 10px;
+      padding: 20px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
+      border: 2px solid #6b2c3e;
+    }
+    .logo-title-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .logo {
+      height: 80px;
+      margin-right: 20px;
     }
     h2 {
       text-align: center;
+      color: #6b2c3e;
     }
     table {
       width: 100%;
@@ -28,41 +40,47 @@
       margin-bottom: 20px;
     }
     th, td {
-      border: 1px solid #ccc;
+      border: 1px solid #6b2c3e;
       padding: 10px;
       text-align: center;
+      background-color: #ffffff;
     }
     th {
-      background-color: #f2f2f2;
+      background-color: #e1d4c8;
+      color: #6b2c3e;
     }
     select {
       width: 90%;
       padding: 8px;
       margin-bottom: 10px;
-      border: 1px solid #ccc;
+      border: 1px solid #6b2c3e;
       border-radius: 4px;
+      background-color: #f7f3f0;
     }
     input[type="button"] {
       width: 100%;
       padding: 10px;
-      background-color: #4CAF50;
+      background-color: #6b2c3e;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
     input[type="button"]:hover {
-      background-color: #45a049;
+      background-color: #5a2435;
     }
     .locked {
-      background-color: #a9a9a9;
+      background-color: #ffffff;
       pointer-events: none;
     }
   </style>
 </head>
 <body>
   <div class="form-container">
-    <h2>Stellenbosch Ultimate Frisbee League Score Sheet</h2>
+    <div class="logo-title-container">
+      <img src="SU Comm - Portfolio Logo.jpg" alt="Stellenbosch University Logo" class="logo">
+      <h2>Stellenbosch Ultimate Frisbee League Score Sheet</h2>
+    </div>
     <form id="scoreForm">
       <!-- Description Table -->
       <table>
