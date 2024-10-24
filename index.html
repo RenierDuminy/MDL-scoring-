@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ultimate Frisbee Score Sheet</title>
+  <title>Score Sheet</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -57,7 +57,7 @@
       border-radius: 4px;
       background-color: #f7f3f0;
     }
-    input[type="button"] {
+    input[type="button"], .add-score {
       width: 100%;
       padding: 10px;
       background-color: #6b2c3e;
@@ -66,12 +66,37 @@
       border-radius: 4px;
       cursor: pointer;
     }
-    input[type="button"]:hover {
+    input[type="button"]:hover, .add-score:hover {
       background-color: #5a2435;
     }
     .locked {
       background-color: #ffffff;
       pointer-events: none;
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+    }
+    .popup select, .popup input[type="button"] {
+      width: 100%;
+      margin-top: 10px;
+    }
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 99;
     }
   </style>
 </head>
@@ -79,7 +104,7 @@
   <div class="form-container">
     <div class="logo-title-container">
       <img src="SU Comm - Portfolio Logo.jpg" alt="Stellenbosch University Logo" class="logo">
-      <h2>Stellenbosch Ultimate Frisbee League Score Sheet</h2>
+      <h2>Stellenbosch Ultimate Frisbee</h2>
     </div>
     <form id="scoreForm">
       <!-- Description Table -->
@@ -118,6 +143,12 @@
         <tbody id="scoringTableBody"></tbody>
       </table>
 
+      <!-- Add Score Buttons -->
+      <div style="display: flex; justify-content: space-between;">
+        <button type="button" class="add-score" onclick="openPopup('A')">+ Add Score for Team A</button>
+        <button type="button" class="add-score" onclick="openPopup('B')">+ Add Score for Team B</button>
+      </div>
+
       <!-- Team List Table -->
       <table>
         <tr>
@@ -134,11 +165,24 @@
     </form>
   </div>
 
+  <!-- Popup for Adding Score -->
+  <div class="overlay" id="overlay"></div>
+  <div class="popup" id="scorePopup">
+    <button type="button" onclick="closePopup()" style="float: right; background: none; border: none; font-size: 16px; cursor: pointer;">&times;</button>
+    <h3>Add Score</h3>
+    <select id="scorer" required>
+      <option value="">Select Scorer</option>
+    </select>
+    <select id="assist" required>
+      <option value="">Select Assist</option>
+    </select>
+    <input type="button" value="Add Score" onclick="addScore()">
+  </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById('time').value = new Date().toLocaleString();
       fetchTeams();
-      addScoringRow();
     });
 
     async function fetchTeams() {
@@ -173,71 +217,77 @@
       const playerListElement = document.getElementById(`${team}List`);
       const players = teams.filter(item => item.teamA === selectedTeam).map((item, index) => `${index + 1} - ${item.teamB}`);
       playerListElement.value = players.join('\n');
-      updateScoringDropdowns();
     }
 
-    function addScoringRow() {
-      const scoringTableBody = document.getElementById('scoringTableBody');
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td><select class="scoreA"><option value="">Select Player</option></select></td>
-        <td><select class="assistA"><option value="">Select Player</option></select></td>
-        <td class="total">0 : 0</td>
-        <td><select class="scoreB"><option value="">Select Player</option></select></td>
-        <td><select class="assistB"><option value="">Select Player</option></select></td>
-      `;
-      scoringTableBody.appendChild(row);
-      row.addEventListener('change', handleRowChange);
-    }
+    function openPopup(team) {
+      document.getElementById('overlay').style.display = 'block';
+      document.getElementById('scorePopup').style.display = 'block';
 
-    function updateScoringDropdowns() {
-      const teams = JSON.parse(sessionStorage.getItem('teams'));
-      const teamAPlayers = document.getElementById('teamA').value;
-      const teamBPlayers = document.getElementById('teamB').value;
-      const teamAList = teams.filter(item => item.teamA === teamAPlayers).map((item, index) => `${index + 1} - ${item.teamB}`);
-      const teamBList = teams.filter(item => item.teamA === teamBPlayers).map((item, index) => `${index + 1} - ${item.teamB}`);
+      const scorerDropdown = document.getElementById('scorer');
+      const assistDropdown = document.getElementById('assist');
+      scorerDropdown.innerHTML = '<option value="">Select Scorer</option>';
+      assistDropdown.innerHTML = '<option value="">Select Assist</option>';
 
-      document.querySelectorAll('.scoreA, .assistA').forEach(dropdown => updateDropdownOptions(dropdown, teamAList));
-      document.querySelectorAll('.scoreB, .assistB').forEach(dropdown => updateDropdownOptions(dropdown, teamBList));
-    }
-
-    function updateDropdownOptions(dropdown, options) {
-      dropdown.innerHTML = '<option value="">Select Player</option>';
-      options.forEach(option => {
-        dropdown.innerHTML += `<option value="${option}">${option}</option>`;
+      const players = document.getElementById(team === 'A' ? 'teamAList' : 'teamBList').value.split('\n');
+      players.forEach(player => {
+        scorerDropdown.innerHTML += `<option value="${player}">${player}</option>`;
+        assistDropdown.innerHTML += `<option value="${player}">${player}</option>`;
       });
+
+      document.getElementById('scorePopup').dataset.team = team;
     }
 
-    function handleRowChange(e) {
-      if (e.target.tagName === 'SELECT' && e.target.value) {
-        const row = e.target.closest('tr');
-        const scoreA = row.querySelector('.scoreA').value;
-        const assistA = row.querySelector('.assistA').value;
-        const scoreB = row.querySelector('.scoreB').value;
-        const assistB = row.querySelector('.assistB').value;
+    function addScore() {
+      const team = document.getElementById('scorePopup').dataset.team;
+      const scorer = document.getElementById('scorer').value;
+      const assist = document.getElementById('assist').value;
 
-        if ((scoreA && assistA) || (scoreB && assistB)) {
-          const totalCell = row.querySelector('.total');
-          let [currentScoreA, currentScoreB] = totalCell.textContent.split(':').map(Number);
-
-          if (scoreA && assistA) {
-            currentScoreA++;
-            lockCells(row, '.scoreB', '.assistB');
-          } else if (scoreB && assistB) {
-            currentScoreB++;
-            lockCells(row, '.scoreA', '.assistA');
-          }
-
-          totalCell.textContent = `${currentScoreA} : ${currentScoreB}`;
-          addScoringRow();
+      if (scorer && assist) {
+        const scoringTableBody = document.getElementById('scoringTableBody');
+        const row = document.createElement('tr');
+        if (team === 'A') {
+          row.innerHTML = `
+            <td>${scorer}</td>
+            <td>${assist}</td>
+            <td class="total"></td>
+            <td></td>
+            <td></td>
+          `;
+        } else {
+          row.innerHTML = `
+            <td></td>
+            <td></td>
+            <td class="total"></td>
+            <td>${scorer}</td>
+            <td>${assist}</td>
+          `;
         }
+        scoringTableBody.appendChild(row);
+        updateScore(team);
+        closePopup();
+      } else {
+        alert('Please select both scorer and assist.');
       }
     }
 
-    function lockCells(row, scoreClass, assistClass) {
-      row.querySelectorAll(scoreClass + ', ' + assistClass).forEach(cell => {
-        cell.classList.add('locked');
-      });
+    function updateScore(team) {
+      const previousRows = Array.from(document.querySelectorAll('#scoringTableBody .total'));
+      let currentScoreA = previousRows.reduce((acc, cell) => acc + parseInt(cell.textContent.split(':')[0]), 0) || 0;
+      let currentScoreB = previousRows.reduce((acc, cell) => acc + parseInt(cell.textContent.split(':')[1]), 0) || 0;
+
+      if (team === 'A') {
+        currentScoreA++;
+      } else {
+        currentScoreB++;
+      }
+
+      const newTotalCell = document.querySelector('#scoringTableBody tr:last-child .total');
+      newTotalCell.textContent = `${currentScoreA} : ${currentScoreB}`;
+    }
+
+    function closePopup() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('scorePopup').style.display = 'none';
     }
 
     async function submitScore() {
@@ -247,11 +297,11 @@
           teamB: document.getElementById('teamB').value,
           time: document.getElementById('time').value,
           scores: Array.from(document.querySelectorAll('#scoringTableBody tr')).map(row => ({
-            scoreA: row.querySelector('.scoreA').value || "",
-            assistA: row.querySelector('.assistA').value || "",
-            scoreB: row.querySelector('.scoreB').value || "",
-            assistB: row.querySelector('.assistB').value || "",
-            total: row.querySelector('.total').textContent
+            scoreA: row.cells[0].textContent || "",
+            assistA: row.cells[1].textContent || "",
+            scoreB: row.cells[3].textContent || "",
+            assistB: row.cells[4].textContent || "",
+            total: row.cells[1].textContent
           }))
         };
 
