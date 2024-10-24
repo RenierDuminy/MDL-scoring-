@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Score Sheet</title>
   <style>
+    /* Base Styles */
     body {
       font-family: Arial, sans-serif;
       background-color: #f7f3f0;
@@ -13,65 +14,67 @@
     }
     .form-container {
       background-color: #ffffff;
-      padding: 20px;
+      padding: 15px;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      max-width: 700px;
       margin: auto;
       border: 2px solid #6b2c3e;
+      max-width: 700px;
+      box-sizing: border-box;
     }
     .logo-title-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      text-align: center;
       margin-bottom: 20px;
     }
     .logo {
-      height: 80px;
-      margin-right: 20px;
+      height: 60px;
+      margin-bottom: 10px;
     }
     h2 {
-      text-align: center;
       color: #6b2c3e;
+      font-size: 1.5em;
+      margin: 0;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 20px;
+      table-layout: fixed;
     }
     th, td {
       border: 1px solid #6b2c3e;
-      padding: 10px;
+      padding: 8px;
       text-align: center;
       background-color: #ffffff;
+      font-size: 0.9em;
+      word-wrap: break-word;
     }
     th {
       background-color: #e1d4c8;
       color: #6b2c3e;
     }
-    select {
-      width: 90%;
+    select, input[type="text"], textarea {
+      width: 100%;
       padding: 8px;
       margin-bottom: 10px;
       border: 1px solid #6b2c3e;
       border-radius: 4px;
       background-color: #f7f3f0;
+      font-size: 1em;
+      box-sizing: border-box;
     }
-    input[type="button"], .add-score {
+    input[type="button"], .add-score, button {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       background-color: #6b2c3e;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      font-size: 1em;
+      margin-bottom: 10px;
     }
-    input[type="button"]:hover, .add-score:hover {
+    input[type="button"]:hover, .add-score:hover, button:hover {
       background-color: #5a2435;
-    }
-    .locked {
-      background-color: #ffffff;
-      pointer-events: none;
     }
     .popup {
       display: none;
@@ -80,13 +83,17 @@
       top: 50%;
       transform: translate(-50%, -50%);
       background-color: #fff;
-      padding: 20px;
+      padding: 15px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
       z-index: 100;
+      width: 90%;
+      max-width: 400px;
+      box-sizing: border-box;
     }
     .popup select, .popup input[type="button"] {
       width: 100%;
       margin-top: 10px;
+      font-size: 1em;
     }
     .overlay {
       display: none;
@@ -98,12 +105,30 @@
       background: rgba(0, 0, 0, 0.7);
       z-index: 99;
     }
+    /* Responsive Styles */
+    @media (max-width: 600px) {
+      .form-container {
+        padding: 10px;
+      }
+      th, td {
+        font-size: 0.8em;
+        padding: 6px;
+      }
+      input[type="button"], .add-score, button {
+        font-size: 0.9em;
+        padding: 10px;
+      }
+      select, input[type="text"], textarea {
+        font-size: 0.9em;
+        padding: 6px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="form-container">
     <div class="logo-title-container">
-      <img src="SU Comm - Portfolio Logo.jpg" alt="Stellenbosch University Logo" class="logo">
+      <img src="SU_Comm_Portfolio_Logo.jpg" alt="Stellenbosch University Logo" class="logo">
       <h2>Stellenbosch Ultimate Frisbee</h2>
     </div>
     <form id="scoreForm">
@@ -132,19 +157,21 @@
       </table>
 
       <!-- Scoring Table -->
-      <table>
-        <tr>
-          <th>Score A</th>
-          <th>Assist A</th>
-          <th>Total</th>
-          <th>Score B</th>
-          <th>Assist B</th>
-        </tr>
-        <tbody id="scoringTableBody"></tbody>
-      </table>
+      <div style="overflow-x:auto;">
+        <table>
+          <tr>
+            <th>Score A</th>
+            <th>Assist A</th>
+            <th>Total</th>
+            <th>Score B</th>
+            <th>Assist B</th>
+          </tr>
+          <tbody id="scoringTableBody"></tbody>
+        </table>
+      </div>
 
       <!-- Add Score Buttons -->
-      <div style="display: flex; justify-content: space-between;">
+      <div style="display: flex; flex-direction: column; gap: 10px;">
         <button type="button" class="add-score" onclick="openPopup('A')">+ Add Score for Team A</button>
         <button type="button" class="add-score" onclick="openPopup('B')">+ Add Score for Team B</button>
       </div>
@@ -153,10 +180,14 @@
       <table>
         <tr>
           <th>Team A Players</th>
-          <th>Team B Players</th>
         </tr>
         <tr>
           <td><textarea id="teamAList" rows="5" readonly></textarea></td>
+        </tr>
+        <tr>
+          <th>Team B Players</th>
+        </tr>
+        <tr>
           <td><textarea id="teamBList" rows="5" readonly></textarea></td>
         </tr>
       </table>
@@ -168,7 +199,7 @@
   <!-- Popup for Adding Score -->
   <div class="overlay" id="overlay"></div>
   <div class="popup" id="scorePopup">
-    <button type="button" onclick="closePopup()" style="float: right; background: none; border: none; font-size: 16px; cursor: pointer;">&times;</button>
+    <button type="button" onclick="closePopup()" style="float: right; background: none; border: none; font-size: 1.5em; cursor: pointer;">&times;</button>
     <h3>Add Score</h3>
     <select id="scorer" required>
       <option value="">Select Scorer</option>
@@ -191,7 +222,7 @@
 
     async function fetchTeams() {
       try { 
-        const response = await fetch('https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec');
+        const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE');
         const teams = await response.json();
         sessionStorage.setItem('teams', JSON.stringify(teams));
         populateTeamOptions(teams);
@@ -234,8 +265,9 @@
 
       const players = document.getElementById(team === 'A' ? 'teamAList' : 'teamBList').value.split('\n');
       players.forEach(player => {
-        scorerDropdown.innerHTML += `<option value="${player}">${player}</option>`;
-        assistDropdown.innerHTML += `<option value="${player}">${player}</option>`;
+        const playerName = player.substring(player.indexOf('-') + 2);
+        scorerDropdown.innerHTML += `<option value="${playerName}">${playerName}</option>`;
+        assistDropdown.innerHTML += `<option value="${playerName}">${playerName}</option>`;
       });
 
       document.getElementById('scorePopup').dataset.team = team;
@@ -247,13 +279,14 @@
       const assist = document.getElementById('assist').value;
 
       if (scorer && assist) {
+        updateScore(team);
         const scoringTableBody = document.getElementById('scoringTableBody');
         const row = document.createElement('tr');
         if (team === 'A') {
           row.innerHTML = `
             <td>${scorer}</td>
             <td>${assist}</td>
-            <td class="total"></td>
+            <td class="total">${teamAScore}:${teamBScore}</td>
             <td></td>
             <td></td>
           `;
@@ -261,18 +294,12 @@
           row.innerHTML = `
             <td></td>
             <td></td>
-            <td class="total"></td>
+            <td class="total">${teamAScore}:${teamBScore}</td>
             <td>${scorer}</td>
             <td>${assist}</td>
           `;
         }
         scoringTableBody.appendChild(row);
-        updateScore(team);
-
-        // Update the 'Total' cell
-        const totalCell = row.querySelector('.total');
-        totalCell.textContent = `${teamAScore}:${teamBScore}`;
-
         closePopup();
       } else {
         alert('Please select both scorer and assist.');
@@ -307,7 +334,7 @@
           }))
         };
 
-        const response = await fetch('https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec', {
+        const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
