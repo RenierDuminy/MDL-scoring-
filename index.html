@@ -180,6 +180,10 @@
   </div>
 
   <script>
+    // Initialize score variables
+    let teamAScore = 0;
+    let teamBScore = 0;
+
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById('time').value = new Date().toLocaleString();
       fetchTeams();
@@ -264,6 +268,11 @@
         }
         scoringTableBody.appendChild(row);
         updateScore(team);
+
+        // Update the 'Total' cell
+        const totalCell = row.querySelector('.total');
+        totalCell.textContent = `${teamAScore}:${teamBScore}`;
+
         closePopup();
       } else {
         alert('Please select both scorer and assist.');
@@ -271,18 +280,11 @@
     }
 
     function updateScore(team) {
-      const previousRows = Array.from(document.querySelectorAll('#scoringTableBody .total'));
-      let currentScoreA = previousRows.reduce((acc, cell) => acc + parseInt(cell.textContent.split(':')[0]), 0) || 0;
-      let currentScoreB = previousRows.reduce((acc, cell) => acc + parseInt(cell.textContent.split(':')[1]), 0) || 0;
-
-      if (team === 'A') {
-        currentScoreA++;
-      } else {
-        currentScoreB++;
+      if (team == 'A') {
+        teamAScore += 1;
+      } else if (team == 'B') {
+        teamBScore += 1;
       }
-
-      const newTotalCell = document.querySelector('#scoringTableBody tr:last-child .total');
-      newTotalCell.textContent = `${currentScoreA} : ${currentScoreB}`;
     }
 
     function closePopup() {
@@ -299,9 +301,9 @@
           scores: Array.from(document.querySelectorAll('#scoringTableBody tr')).map(row => ({
             scoreA: row.cells[0].textContent || "",
             assistA: row.cells[1].textContent || "",
+            total: row.cells[2].textContent || "",
             scoreB: row.cells[3].textContent || "",
-            assistB: row.cells[4].textContent || "",
-            total: row.cells[1].textContent
+            assistB: row.cells[4].textContent || ""
           }))
         };
 
