@@ -258,7 +258,7 @@
       } else {
         // If not, fetch from the server
         try {
-          const response = await fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec');
+          const response = await fetch('https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec');
           const teams = await response.json();
           teamsData = teams; // Cache the teams data globally
           sessionStorage.setItem('teams', JSON.stringify(teams)); // Store in sessionStorage for future use
@@ -444,7 +444,7 @@
         };
 
         // Send the data to the server via a POST request
-        const response = await fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
