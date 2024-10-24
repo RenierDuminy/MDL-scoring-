@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Score Sheet</title>
   <style>
-    /* Base Styles */
     body {
       font-family: Arial, sans-serif;
       background-color: #f7f3f0;
@@ -14,67 +13,77 @@
     }
     .form-container {
       background-color: #ffffff;
-      padding: 15px;
+      padding: 20px;
       border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
       margin: auto;
       border: 2px solid #6b2c3e;
-      max-width: 700px;
-      box-sizing: border-box;
     }
     .logo-title-container {
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 20px;
     }
     .logo {
-      height: 60px;
-      margin-bottom: 10px;
+      height: 80px;
+      margin-right: 20px;
     }
     h2 {
+      text-align: center;
       color: #6b2c3e;
-      font-size: 1.5em;
-      margin: 0;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 20px;
-      table-layout: fixed;
     }
     th, td {
       border: 1px solid #6b2c3e;
-      padding: 8px;
+      padding: 10px;
       text-align: center;
       background-color: #ffffff;
-      font-size: 0.9em;
-      word-wrap: break-word;
     }
     th {
       background-color: #e1d4c8;
       color: #6b2c3e;
     }
-    select, input[type="text"], textarea {
-      width: 100%;
+    select {
+      width: 90%;
       padding: 8px;
       margin-bottom: 10px;
       border: 1px solid #6b2c3e;
       border-radius: 4px;
       background-color: #f7f3f0;
-      font-size: 1em;
-      box-sizing: border-box;
     }
-    input[type="button"], .add-score, button {
+    textarea {
+      overflow-y: hidden;
+      resize: none;
       width: 100%;
-      padding: 12px;
+      border: 1px solid #6b2c3e;
+      border-radius: 4px;
+      padding: 8px;
+      background-color: #f7f3f0;
+    }
+    input[type="button"], .add-score {
+      padding: 10px;
       background-color: #6b2c3e;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 1em;
-      margin-bottom: 10px;
+      flex: 1;
     }
-    input[type="button"]:hover, .add-score:hover, button:hover {
+    .taller-button {
+      padding: 12.5px 10px; /* Increase height by 25% */
+    }
+    input[type="button"]:hover, .add-score:hover {
       background-color: #5a2435;
+    }
+    .locked {
+      background-color: #ffffff;
+      pointer-events: none;
     }
     .popup {
       display: none;
@@ -83,17 +92,13 @@
       top: 50%;
       transform: translate(-50%, -50%);
       background-color: #fff;
-      padding: 15px;
+      padding: 20px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
       z-index: 100;
-      width: 90%;
-      max-width: 400px;
-      box-sizing: border-box;
     }
     .popup select, .popup input[type="button"] {
       width: 100%;
       margin-top: 10px;
-      font-size: 1em;
     }
     .overlay {
       display: none;
@@ -105,22 +110,31 @@
       background: rgba(0, 0, 0, 0.7);
       z-index: 99;
     }
-    /* Responsive Styles */
+    /* Center team list boxes */
+    .team-list-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .team-list-container > div {
+      flex: 1;
+      margin: 0 10px;
+    }
+    /* Responsive adjustments */
     @media (max-width: 600px) {
-      .form-container {
-        padding: 10px;
+      .logo-title-container {
+        flex-direction: column;
       }
-      th, td {
-        font-size: 0.8em;
-        padding: 6px;
+      .logo {
+        margin-right: 0;
+        margin-bottom: 10px;
       }
-      input[type="button"], .add-score, button {
-        font-size: 0.9em;
-        padding: 10px;
+      .team-list-container {
+        flex-direction: column;
+        align-items: center;
       }
-      select, input[type="text"], textarea {
-        font-size: 0.9em;
-        padding: 6px;
+      .team-list-container > div {
+        margin: 10px 0;
       }
     }
   </style>
@@ -128,7 +142,7 @@
 <body>
   <div class="form-container">
     <div class="logo-title-container">
-      <img src="SU_Comm_Portfolio_Logo.jpg" alt="Stellenbosch University Logo" class="logo">
+      <img src="SU Comm - Portfolio Logo.jpg" alt="Stellenbosch University Logo" class="logo">
       <h2>Stellenbosch Ultimate Frisbee</h2>
     </div>
     <form id="scoreForm">
@@ -157,40 +171,34 @@
       </table>
 
       <!-- Scoring Table -->
-      <div style="overflow-x:auto;">
-        <table>
-          <tr>
-            <th>Score A</th>
-            <th>Assist A</th>
-            <th>Total</th>
-            <th>Score B</th>
-            <th>Assist B</th>
-          </tr>
-          <tbody id="scoringTableBody"></tbody>
-        </table>
-      </div>
+      <table>
+        <tr>
+          <th>Score A</th>
+          <th>Assist A</th>
+          <th>Total</th>
+          <th>Score B</th>
+          <th>Assist B</th>
+        </tr>
+        <tbody id="scoringTableBody"></tbody>
+      </table>
 
       <!-- Add Score Buttons -->
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <button type="button" class="add-score" onclick="openPopup('A')">+ Add Score for Team A</button>
+      <div style="display: flex; justify-content: space-between;">
+        <button type="button" class="add-score taller-button" onclick="openPopup('A')">+ Add Score for Team A</button>
         <button type="button" class="add-score" onclick="openPopup('B')">+ Add Score for Team B</button>
       </div>
 
-      <!-- Team List Table -->
-      <table>
-        <tr>
-          <th>Team A Players</th>
-        </tr>
-        <tr>
-          <td><textarea id="teamAList" rows="5" readonly></textarea></td>
-        </tr>
-        <tr>
-          <th>Team B Players</th>
-        </tr>
-        <tr>
-          <td><textarea id="teamBList" rows="5" readonly></textarea></td>
-        </tr>
-      </table>
+      <!-- Team List Section -->
+      <div class="team-list-container">
+        <div>
+          <h3>Team A Players</h3>
+          <textarea id="teamAList" readonly></textarea>
+        </div>
+        <div>
+          <h3>Team B Players</h3>
+          <textarea id="teamBList" readonly></textarea>
+        </div>
+      </div>
 
       <input type="button" value="Submit" onclick="submitScore()">
     </form>
@@ -199,7 +207,7 @@
   <!-- Popup for Adding Score -->
   <div class="overlay" id="overlay"></div>
   <div class="popup" id="scorePopup">
-    <button type="button" onclick="closePopup()" style="float: right; background: none; border: none; font-size: 1.5em; cursor: pointer;">&times;</button>
+    <button type="button" onclick="closePopup()" style="float: right; background: none; border: none; font-size: 16px; cursor: pointer;">&times;</button>
     <h3>Add Score</h3>
     <select id="scorer" required>
       <option value="">Select Scorer</option>
@@ -221,13 +229,19 @@
     });
 
     async function fetchTeams() {
-      try { 
-        const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE');
-        const teams = await response.json();
-        sessionStorage.setItem('teams', JSON.stringify(teams));
+      const storedTeams = sessionStorage.getItem('teams');
+      if (storedTeams) {
+        const teams = JSON.parse(storedTeams);
         populateTeamOptions(teams);
-      } catch (error) {
-        console.error('Error fetching team names:', error);
+      } else {
+        try {
+          const response = await fetch('https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec');
+          const teams = await response.json();
+          sessionStorage.setItem('teams', JSON.stringify(teams));
+          populateTeamOptions(teams);
+        } catch (error) {
+          console.error('Error fetching team names:', error);
+        }
       }
     }
 
@@ -252,6 +266,10 @@
       const playerListElement = document.getElementById(`${team}List`);
       const players = teams.filter(item => item.teamA === selectedTeam).map((item, index) => `${index + 1} - ${item.teamB}`);
       playerListElement.value = players.join('\n');
+
+      // Adjust the height of the textarea to fit the content
+      playerListElement.style.height = 'auto';
+      playerListElement.style.height = (playerListElement.scrollHeight) + 'px';
     }
 
     function openPopup(team) {
@@ -265,9 +283,8 @@
 
       const players = document.getElementById(team === 'A' ? 'teamAList' : 'teamBList').value.split('\n');
       players.forEach(player => {
-        const playerName = player.substring(player.indexOf('-') + 2);
-        scorerDropdown.innerHTML += `<option value="${playerName}">${playerName}</option>`;
-        assistDropdown.innerHTML += `<option value="${playerName}">${playerName}</option>`;
+        scorerDropdown.innerHTML += `<option value="${player}">${player}</option>`;
+        assistDropdown.innerHTML += `<option value="${player}">${player}</option>`;
       });
 
       document.getElementById('scorePopup').dataset.team = team;
@@ -279,14 +296,13 @@
       const assist = document.getElementById('assist').value;
 
       if (scorer && assist) {
-        updateScore(team);
         const scoringTableBody = document.getElementById('scoringTableBody');
         const row = document.createElement('tr');
         if (team === 'A') {
           row.innerHTML = `
             <td>${scorer}</td>
             <td>${assist}</td>
-            <td class="total">${teamAScore}:${teamBScore}</td>
+            <td class="total"></td>
             <td></td>
             <td></td>
           `;
@@ -294,12 +310,18 @@
           row.innerHTML = `
             <td></td>
             <td></td>
-            <td class="total">${teamAScore}:${teamBScore}</td>
+            <td class="total"></td>
             <td>${scorer}</td>
             <td>${assist}</td>
           `;
         }
         scoringTableBody.appendChild(row);
+        updateScore(team);
+
+        // Update the 'Total' cell
+        const totalCell = row.querySelector('.total');
+        totalCell.textContent = `${teamAScore}:${teamBScore}`;
+
         closePopup();
       } else {
         alert('Please select both scorer and assist.');
@@ -334,7 +356,7 @@
           }))
         };
 
-        const response = await fetch('YOUR_GOOGLE_APPS_SCRIPT_URL_HERE', {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
