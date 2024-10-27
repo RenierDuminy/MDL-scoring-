@@ -7,59 +7,59 @@
   <title>Score Sheet</title>
   <style>
     /* CSS styles for the page layout and design */
-    body {
+    body { /* Backgroud */
       font-family: Arial, sans-serif;
       background-color: #f7f3f0;
       margin: 0;
       padding: 10px;
     }
-    .form-container {
+    .form-container { /* Main table outline */
       background-color: #ffffff;
       padding: 20px;
-      border-radius: 8px;
+      border-radius: 15px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       max-width: 700px;
       margin: auto;
-      border: 2px solid #6b2c3e;
+      border: 4px solid #6b2c3e;
     }
-    .logo-title-container {
+    .logo-title-container { /* Logo box */
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .logo {
       height: 80px;
       margin-right: 20px;
     }
-    h2 {
+    h2 { /* Main title*/
       text-align: center;
       color: #6b2c3e;
     }
-    table {
+    table { /* All tables */
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
     }
-    th, td {
+    th, td { /* Table data */
       border: 1px solid #6b2c3e;
-      padding: 10px;
+      padding: 8px;
       text-align: center;
       background-color: #ffffff;
     }
-    th {
+    th { /* Table Headings*/
       background-color: #e1d4c8;
       color: #6b2c3e;
     }
-    select {
+    select { /* Team Dropdowns*/
       width: 90%;
-      padding: 8px;
-      margin-bottom: 10px;
+      padding: 12px;
+      margin-bottom: 0px;
       border: 1px solid #6b2c3e;
-      border-radius: 4px;
+      border-radius: 8px;
       background-color: #f7f3f0;
     }
-    textarea {
+    textarea { /* Team list area */
       overflow-y: hidden;
       resize: none;
       width: 100%;
@@ -68,17 +68,17 @@
       padding: 8px;
       background-color: #f7f3f0;
     }
-    input[type="button"], .add-score {
+    input[type="button"], .add-score { /* Add score button*/
       padding: 10px;
       background-color: #6b2c3e;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
       flex: 1;
     }
-    .taller-button {
-      padding: 12.5px 10px; /* Increase height by 25% */
+    .taller-button { /* Add score button - Height*/
+      padding: 20px;
     }
     input[type="button"]:hover, .add-score:hover {
       background-color: #5a2435;
@@ -87,20 +87,22 @@
       background-color: #ffffff;
       pointer-events: none;
     }
-    .popup {
+    .popup { /* Score-Assist pLayer popup */
       display: none;
       position: fixed;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
       background-color: #fff;
-      padding: 20px;
+      padding: 10px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
       z-index: 100;
+      border-radius: 15px;
     }
     .popup select, .popup input[type="button"] {
       width: 100%;
       margin-top: 10px;
+      border-radius: 10px;
     }
     .overlay {
       display: none;
@@ -112,8 +114,8 @@
       background: rgba(0, 0, 0, 0.7);
       z-index: 99;
     }
-    /* Center team list boxes */
-    .team-list-container {
+
+    .team-list-container { /* Center team list boxes */
       display: flex;
       justify-content: center;
       align-items: flex-start;
@@ -125,14 +127,14 @@
     }
     /* Reduce font size in the scoring table */
     #scoringTableBody td, #scoringTableBody th {
-      font-size: 14px;
+      font-size: 12px;
     }
     /* Add gap between buttons */
     .add-score-buttons {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-bottom: 10px;
     }
     /* Responsive adjustments */
     @media (max-width: 600px) {

@@ -185,6 +185,16 @@
       font-size: 16px;
       text-align: center;
     }
+    /* Styles for the submit section and loading animation */
+    .submit-section {
+      display: flex;
+      align-items: center;
+    }
+    #loadingAnimation {
+      margin-left: 10px;
+      font-size: 16px;
+      color: #6b2c3e;
+    }
   </style>
 </head>
 <body>
@@ -248,7 +258,11 @@
         </div>
       </div>
 
-      <input type="button" value="Submit" onclick="submitScore()">
+      <!-- Submit Section with Loading Animation -->
+      <div class="submit-section">
+        <input type="button" value="Submit" onclick="submitScore()">
+        <div id="loadingAnimation" style="display: none;">Loading<span id="dots"></span></div>
+      </div>
     </form>
   </div>
 
@@ -295,6 +309,9 @@
 
     // Global variable to store team data
     let teamsData = [];
+
+    // Variable for loading animation interval
+    let loadingInterval;
 
     // Wait for the DOM to load before executing scripts
     document.addEventListener("DOMContentLoaded", () => {
@@ -525,6 +542,28 @@
       document.getElementById('scorePopup').style.display = 'none';
     }
 
+    // Function to start the loading animation
+    function startLoadingAnimation() {
+      const loadingAnimation = document.getElementById('loadingAnimation');
+      const dots = document.getElementById('dots');
+      let dotCount = 0;
+
+      loadingAnimation.style.display = 'block';
+      loadingInterval = setInterval(() => {
+        dotCount = (dotCount + 1) % 4; // cycles through 0 to 3
+        dots.textContent = '.'.repeat(dotCount);
+      }, 500); // Update every 500ms
+    }
+
+    // Function to stop the loading animation
+    function stopLoadingAnimation() {
+      const loadingAnimation = document.getElementById('loadingAnimation');
+      const dots = document.getElementById('dots');
+      clearInterval(loadingInterval);
+      dots.textContent = '';
+      loadingAnimation.style.display = 'none';
+    }
+
     // Modified submitScore function to send data to Google Sheets
     async function submitScore() {
       // Retrieve the logged data from sessionStorage
@@ -548,8 +587,11 @@
       };
 
       try {
+        // Start the loading animation
+        startLoadingAnimation();
+
         // Send the data to the Google Apps Script web app
-        const response = await fetch('https://script.google.com/macros/s/AKfycbwuFfudZfBeMklLVA8lR86dYpEHHVwkhyB_dj661RpbLivWOd1x2XzjSqSITDewzTE/exec', {
+        const response = await fetch('YOUR_WEB_APP_URL', {
           method: 'POST',
           mode: 'no-cors', // 'no-cors' to prevent CORS issues
           headers: {
@@ -561,6 +603,9 @@
         // Since we're using 'no-cors', we cannot read the response
         // Assume success and display the success message
 
+        // Stop the loading animation
+        stopLoadingAnimation();
+
         // Display the success message
         document.getElementById('successMessage').textContent = 'Data has been successfully exported to Google Sheets!';
         document.getElementById('successMessage').style.display = 'block';
@@ -569,6 +614,8 @@
         sessionStorage.removeItem('scoreLogs');
         // Reset form fields and variables if necessary
       } catch (error) {
+        // Stop the loading animation
+        stopLoadingAnimation();
         alert('Error exporting data: ' + error.message);
       }
     }
