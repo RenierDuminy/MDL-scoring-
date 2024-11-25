@@ -4,7 +4,10 @@
   <!-- Metadata and CSS styles -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Score Sheet</title>
+
+  <!-- tab name -->
+  <title>MDL Score Sheet</title>
+
   <style>
     /* CSS styles for the page layout and design */
     body { /* Backgroud */
@@ -15,7 +18,7 @@
     }
     .form-container { /* Main table outline */
       background-color: #ffffff;
-      padding: 20px;
+      padding: 10px;
       border-radius: 15px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       max-width: 700px;
@@ -26,7 +29,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 10px;
+      margin-bottom: 0px;
     }
     .logo {
       height: 80px;
@@ -35,6 +38,7 @@
     h2 { /* Main title*/
       text-align: center;
       color: #6b2c3e;
+      font-size: 20px;
     }
     table { /* All tables */
       width: 100%;
@@ -50,6 +54,7 @@
     th { /* Table Headings*/
       background-color: #e1d4c8;
       color: #6b2c3e;
+      font-size: 13px;
     }
     select { /* Team Dropdowns*/
       width: 90%;
@@ -58,9 +63,10 @@
       border: 1px solid #6b2c3e;
       border-radius: 8px;
       background-color: #f7f3f0;
+      font-size: 14px;
     }
     textarea { /* Team list area */
-      overflow-y: hidden;
+      overflow-y: visible;
       resize: none;
       width: 100%;
       border: 1px solid #6b2c3e;
@@ -73,9 +79,10 @@
       background-color: #6b2c3e;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 15px;
       cursor: pointer;
       flex: 1;
+      font-size: 12px;
     }
     .taller-button { /* Add score button - Height*/
       padding: 20px;
@@ -119,7 +126,7 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      margin-top: 20px;
+      margin-top: 5px;
     }
     .team-list-container > div {
       flex: 1;
@@ -133,8 +140,8 @@
     .add-score-buttons {
       display: flex;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
+      gap: 15px;
+      margin-bottom: 0px;
     }
     /* Responsive adjustments */
     @media (max-width: 600px) {
@@ -143,7 +150,7 @@
       }
       .logo {
         margin-right: 0;
-        margin-bottom: 10px;
+        margin-bottom: 0px;
       }
       .team-list-container {
         flex-direction: column;
@@ -234,8 +241,8 @@
 
       <!-- Add Score Buttons -->
       <div class="add-score-buttons">
-        <button type="button" class="add-score taller-button" onclick="openPopup('A')">+ Add Score for Team A</button>
-        <button type="button" class="add-score" onclick="openPopup('B')">+ Add Score for Team B</button>
+        <button type="button" class="add-score taller-button" onclick="openPopup('A')">Add Score for Team A</button>
+        <button type="button" class="add-score" onclick="openPopup('B')">Add Score for Team B</button>
       </div>
 
       <!-- Team List Section -->
@@ -256,7 +263,7 @@
 
   <!-- Success Message -->
   <div id="successMessage" style="display: none;">
-    Data has been successfully exported to Google Sheets!
+    Data has been successfully exported
   </div>
 
   <!-- Container to display logged data after submission -->
