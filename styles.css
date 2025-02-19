@@ -1,0 +1,225 @@
+/* CSS styles for the page layout and design */
+
+/* Background */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f3f0;
+    margin: 0;
+    padding: 10px;
+  }
+  
+  /* Main table outline */
+  .form-container {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    margin: auto;
+    border: 4px solid #6b2c3e;
+  }
+  
+  /* Logo box */
+  .logo-title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0px;
+  }
+  
+  .logo {
+    height: 80px;
+    margin-right: 20px;
+  }
+  
+  /* Main title */
+  h2 {
+    text-align: center;
+    color: #6b2c3e;
+    font-size: 20px;
+  }
+  
+  /* All tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+  }
+  
+  /* Table data */
+  th, td {
+    border: 1px solid #6b2c3e;
+    padding: 8px;
+    text-align: center;
+    background-color: #ffffff;
+  }
+  
+  /* Table Headings */
+  th {
+    background-color: #e1d4c8;
+    color: #6b2c3e;
+    font-size: 13px;
+  }
+  
+  /* Team Dropdowns */
+  select {
+    width: 90%;
+    padding: 12px;
+    margin-bottom: 0px;
+    border: 1px solid #6b2c3e;
+    border-radius: 8px;
+    background-color: #f7f3f0;
+    font-size: 14px;
+  }
+  
+  /* Team list area */
+  textarea {
+    overflow-y: visible;
+    resize: none;
+    width: 100%;
+    border: 1px solid #6b2c3e;
+    border-radius: 4px;
+    padding: 8px;
+    background-color: #f7f3f0;
+  }
+  
+  /* Add score button */
+  input[type="button"], .add-score {
+    padding: 10px;
+    background-color: #6b2c3e;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    flex: 1;
+    font-size: 12px;
+  }
+  
+  /* Taller button for Team A */
+  .taller-button {
+    padding: 20px;
+  }
+  
+  input[type="button"]:hover, .add-score:hover {
+    background-color: #5a2435;
+  }
+  
+  .locked {
+    background-color: #ffffff;
+    pointer-events: none;
+  }
+  
+  /* Score-Assist player popup */
+  .popup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    border-radius: 15px;
+  }
+  
+  .popup select,
+  .popup input[type="button"] {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 10px;
+  }
+  
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 99;
+  }
+  
+  /* Center team list boxes */
+  .team-list-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 5px;
+  }
+  .team-list-container > div {
+    flex: 1;
+    margin: 0 10px;
+  }
+  
+  /* Reduce font size in the scoring table */
+  #scoringTableBody td, #scoringTableBody th {
+    font-size: 12px;
+  }
+  
+  /* Add gap between buttons */
+  .add-score-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 0px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    .logo-title-container {
+      flex-direction: column;
+    }
+    .logo {
+      margin-right: 0;
+      margin-bottom: 0px;
+    }
+    .team-list-container {
+      flex-direction: column;
+      align-items: center;
+    }
+    .team-list-container > div {
+      margin: 10px 0;
+    }
+  }
+  
+  /* Styles for the logged data display */
+  #loggedDataContainer {
+    max-width: 700px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #6b2c3e;
+  }
+  
+  #loggedDataTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  #loggedDataTable th, #loggedDataTable td {
+    border: 1px solid #6b2c3e;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  #loggedDataTable th {
+    background-color: #e1d4c8;
+    color: #6b2c3e;
+  }
+  
+  /* Styles for the success message */
+  #successMessage {
+    max-width: 700px;
+    margin: 20px auto;
+    background-color: #d4edda; /* Light green background */
+    color: #155724; /* Dark green text */
+    border: 1px solid #c3e6cb; /* Green border */
+    padding: 15px;
+    border-radius: 4px;
+    font-size: 16px;
+    text-align: center;
+  }
+  

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Metadata and CSS styles -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDL Score Sheet</title>
+
+  <!-- Link to external CSS file -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="form-container">
+    <div class="logo-title-container">
+      <img src="SU Comm - Portfolio Logo.jpg" alt="Stellenbosch University Logo" class="logo">
+      <h2>Stellenbosch Ultimate Frisbee</h2>
+    </div>
+    <form id="scoreForm">
+      <!-- Description Table -->
+      <table>
+        <tr>
+          <th>Team A</th>
+          <td>
+            <select id="teamA" required>
+              <option value="">Select Team A</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th>Team B</th>
+          <td>
+            <select id="teamB" required>
+              <option value="">Select Team B</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <th>Time</th>
+          <td><input type="text" id="time" value="" readonly></td>
+        </tr>
+      </table>
+
+      <!-- Scoring Table -->
+      <table>
+        <tr>
+          <th>Score A</th>
+          <th>Assist A</th>
+          <th>Total</th>
+          <th>Score B</th>
+          <th>Assist B</th>
+          <!-- NEW: "Action" column to hold the "Edit" button -->
+          <th>Action</th>
+        </tr>
+        <tbody id="scoringTableBody"></tbody>
+      </table>
+
+      <!-- Add Score Buttons -->
+      <div class="add-score-buttons">
+        <button type="button" class="add-score taller-button" onclick="openPopup('A')">Add Score for Team A</button>
+        <button type="button" class="add-score" onclick="openPopup('B')">Add Score for Team B</button>
+      </div>
+
+      <!-- Team List Section -->
+      <div class="team-list-container">
+        <div>
+          <h3>Team A Players</h3>
+          <textarea id="teamAList" readonly></textarea>
+        </div>
+        <div>
+          <h3>Team B Players</h3>
+          <textarea id="teamBList" readonly></textarea>
+        </div>
+      </div>
+
+      <input type="button" value="Submit" onclick="submitScore()">
+    </form>
+  </div>
+
+  <!-- Success Message -->
+  <div id="successMessage" style="display: none;">
+    Data has been successfully exported
+  </div>
+
+  <!-- Container to display logged data after submission -->
+  <div id="loggedDataContainer" style="display: none;">
+    <h3>Logged Data</h3>
+    <table id="loggedDataTable">
+      <thead>
+        <tr>
+          <th>GameID</th>
+          <th>Time</th>
+          <th>Team</th>
+          <th>Score</th>
+          <th>Assist</th>
+        </tr>
+      </thead>
+      <tbody id="loggedDataBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Popup for Adding or Editing a Score -->
+  <div class="overlay" id="overlay"></div>
+  <div class="popup" id="scorePopup">
+    <!-- Close Button -->
+    <button
+      type="button"
+      onclick="closePopup()"
+      style="float: right; background: none; border: none; font-size: 16px; cursor: pointer;"
+    >
+      &times;
+    </button>
+    
+    <h3 id="popupTitle">Add Score</h3><!-- CHANGED: We'll dynamically set this text -->
+    
+    <select id="scorer" required>
+      <option value="">Select Scorer</option>
+    </select>
+    <select id="assist" required>
+      <option value="">Select Assist</option>
+    </select>
+
+    <!-- CHANGED: Single button for both adding or updating a score -->
+    <input type="button" id="confirmScoreBtn" value="Add Score" onclick="confirmScore()">
+  </div>
+
+  <!-- Link to external JavaScript file -->
+  <script src="script.js"></script>
+</body>
+</html>
