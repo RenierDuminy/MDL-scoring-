@@ -1,42 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Metadata and CSS styles -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MDL Score Sheet</title>
+  <title>Score Sheet</title>
+  <link rel="icon" href="./page_icon.png" type="image/png"> 
+  <link rel="shortcut icon" href="./page_icon.png" type="image/png">
+
+  <!-- Link to the external CSS file -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="form-container">
     <div class="logo-title-container">
-      <img src="SU Comm - Portfolio Logo.jpg" alt="Stellenbosch University Logo" class="logo">
-      <h2>Stellenbosch Ultimate Frisbee (T_1)</h2>
+      <img src="SU Comm - Universal logo.jpg" alt="Maties Ultimate Frisbee" class="logo">
+      <h2>IDL 3.0</h2>
     </div>
+
     <form id="scoreForm">
+      <!-- Description Table -->
       <table>
         <tr>
           <th>Team A</th>
-          <td><select id="teamA" required><option value="">Select Team A</option></select></td>
+          <td>
+            <select id="teamA" required>
+              <option value="">Select Team A</option>
+            </select>
+          </td>
         </tr>
         <tr>
           <th>Team B</th>
-          <td><select id="teamB" required><option value="">Select Team B</option></select></td>
+          <td>
+            <select id="teamB" required>
+              <option value="">Select Team B</option>
+            </select>
+          </td>
         </tr>
         <tr>
           <th>Time</th>
-          <td><input type="text" id="time" readonly></td>
+          <td><input type="text" id="time" value="" readonly></td>
         </tr>
       </table>
+
+      <!-- Scoring Table -->
       <table>
         <tr>
-          <th>Score A</th><th>Assist A</th><th>Total</th><th>Score B</th><th>Assist B</th><th>Action</th>
+          <th>Score A</th>
+          <th>Assist A</th>
+          <th>Total</th>
+          <th>Score B</th>
+          <th>Assist B</th>
+          <th>Edit</th>
         </tr>
         <tbody id="scoringTableBody"></tbody>
       </table>
+
+      <!-- Add Score Buttons -->
       <div class="add-score-buttons">
-        <button type="button" class="add-score taller-button" onclick="openPopup('A')">Add Score for Team A</button>
-        <button type="button" class="add-score" onclick="openPopup('B')">Add Score for Team B</button>
+        <button type="button" class="add-score taller-button" onclick="openPopup('A')">
+          + Add Score for Team A
+        </button>
+        <button type="button" class="add-score" onclick="openPopup('B')">
+          + Add Score for Team B
+        </button>
       </div>
+
+      <!-- Team List Section -->
       <div class="team-list-container">
         <div>
           <h3>Team A Players</h3>
@@ -47,29 +77,67 @@
           <textarea id="teamBList" readonly></textarea>
         </div>
       </div>
-      <input type="button" value="Submit" onclick="submitScore()">
+
+      <!-- Submit Section with Loading Animation -->
+      <div class="submit-section">
+        <input type="button" value="Submit" onclick="submitScore()">
+        <div id="loadingAnimation" style="display: none;">
+          Loading<span id="dots"></span>
+        </div>
+      </div>
     </form>
   </div>
-  <div id="successMessage" style="display: none;">Data has been successfully exported</div>
+
+  <!-- Success Message -->
+  <div id="successMessage" style="display: none;">
+    Data has been successfully exported to Google Sheets!
+  </div>
+
+  <!-- Container to display logged data after submission -->
   <div id="loggedDataContainer" style="display: none;">
     <h3>Logged Data</h3>
     <table id="loggedDataTable">
       <thead>
         <tr>
-          <th>GameID</th><th>Time</th><th>Team</th><th>Score</th><th>Assist</th>
+          <th>GameID</th>
+          <th>Time</th>
+          <th>Team</th>
+          <th>Score</th>
+          <th>Assist</th>
         </tr>
       </thead>
       <tbody id="loggedDataBody"></tbody>
     </table>
   </div>
+
+  <!-- Popup for Adding/Editing Score -->
   <div class="overlay" id="overlay"></div>
   <div class="popup" id="scorePopup">
-    <button type="button" onclick="closePopup()" class="close-btn" style="position: absolute; top: 10px; right: 10px; font-size: 20px; font-weight: bold; border: none; background: none; cursor: pointer;">&times;</button>
-    <h3 id="popupTitle">Add Score</h3>
-    <select id="scorer" required><option value="">Select Scorer</option></select>
-    <select id="assist" required><option value="">Select Assist</option></select>
-    <input type="button" id="confirmScoreBtn" value="Add Score" onclick="confirmScore()">
+    <button
+      type="button"
+      onclick="closePopup()"
+      style="float: right; background: none; border: none; font-size: 16px; cursor: pointer;">
+      &times;
+    </button>
+
+    <h3 id="popupTitle">Add new point</h3>
+
+    <!-- Scorer heading -->
+    <label for="scorer" style="font-weight: bold;">Scorer:</label>
+    <select id="scorer" required>
+      <option value="">Select Scorer</option>
+    </select>
+
+    <!-- Assist heading -->
+    <label for="assist" style="font-weight: bold;">Assist:</label>
+    <select id="assist" required>
+      <option value="">Select Assist</option>
+    </select>
+
+    <input type="button" id="popupButton" value="Add Score" onclick="saveScore()">
   </div>
+
+  <!-- Link to the external JavaScript file -->
   <script src="script.js"></script>
 </body>
 </html>

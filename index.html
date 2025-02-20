@@ -4,17 +4,20 @@
   <!-- Metadata and CSS styles -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MDL Score Sheet</title>
+  <title>Score Sheet</title>
+  <link rel="icon" href="./page_icon.png" type="image/png"> 
+  <link rel="shortcut icon" href="./page_icon.png" type="image/png">
 
-  <!-- Link to external CSS file -->
+  <!-- Link to the external CSS file -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="form-container">
     <div class="logo-title-container">
-      <img src="SU Comm - Portfolio Logo.jpg" alt="Stellenbosch University Logo" class="logo">
-      <h2>Stellenbosch Ultimate Frisbee (OG)</h2>
+      <img src="SU Comm - Universal logo.jpg" alt="Maties Ultimate Frisbee" class="logo">
+      <h2>IDL 3.0</h2>
     </div>
+
     <form id="scoreForm">
       <!-- Description Table -->
       <table>
@@ -48,16 +51,19 @@
           <th>Total</th>
           <th>Score B</th>
           <th>Assist B</th>
-          <!-- NEW: "Action" column to hold the "Edit" button -->
-          <th>Action</th>
+          <th>Edit</th>
         </tr>
         <tbody id="scoringTableBody"></tbody>
       </table>
 
       <!-- Add Score Buttons -->
       <div class="add-score-buttons">
-        <button type="button" class="add-score taller-button" onclick="openPopup('A')">Add Score for Team A</button>
-        <button type="button" class="add-score" onclick="openPopup('B')">Add Score for Team B</button>
+        <button type="button" class="add-score taller-button" onclick="openPopup('A')">
+          + Add Score for Team A
+        </button>
+        <button type="button" class="add-score" onclick="openPopup('B')">
+          + Add Score for Team B
+        </button>
       </div>
 
       <!-- Team List Section -->
@@ -72,13 +78,19 @@
         </div>
       </div>
 
-      <input type="button" value="Submit" onclick="submitScore()">
+      <!-- Submit Section with Loading Animation -->
+      <div class="submit-section">
+        <input type="button" value="Submit" onclick="submitScore()">
+        <div id="loadingAnimation" style="display: none;">
+          Loading<span id="dots"></span>
+        </div>
+      </div>
     </form>
   </div>
 
   <!-- Success Message -->
   <div id="successMessage" style="display: none;">
-    Data has been successfully exported
+    Data has been successfully exported to Google Sheets!
   </div>
 
   <!-- Container to display logged data after submission -->
@@ -98,32 +110,34 @@
     </table>
   </div>
 
-  <!-- Popup for Adding or Editing a Score -->
+  <!-- Popup for Adding/Editing Score -->
   <div class="overlay" id="overlay"></div>
   <div class="popup" id="scorePopup">
-    <!-- Close Button -->
     <button
       type="button"
       onclick="closePopup()"
-      style="float: right; background: none; border: none; font-size: 16px; cursor: pointer;"
-    >
+      style="float: right; background: none; border: none; font-size: 16px; cursor: pointer;">
       &times;
     </button>
-    
-    <h3 id="popupTitle">Add Score</h3><!-- CHANGED: We'll dynamically set this text -->
-    
+
+    <h3 id="popupTitle">Add new point</h3>
+
+    <!-- Scorer heading -->
+    <label for="scorer" style="font-weight: bold;">Scorer:</label>
     <select id="scorer" required>
       <option value="">Select Scorer</option>
     </select>
+
+    <!-- Assist heading -->
+    <label for="assist" style="font-weight: bold;">Assist:</label>
     <select id="assist" required>
       <option value="">Select Assist</option>
     </select>
 
-    <!-- CHANGED: Single button for both adding or updating a score -->
-    <input type="button" id="confirmScoreBtn" value="Add Score" onclick="confirmScore()">
+    <input type="button" id="popupButton" value="Add Score" onclick="saveScore()">
   </div>
 
-  <!-- Link to external JavaScript file -->
+  <!-- Link to the external JavaScript file -->
   <script src="script.js"></script>
 </body>
 </html>

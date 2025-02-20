@@ -20,7 +20,7 @@
   float: right;
   background: none;
   border: none;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -163,6 +163,11 @@ input[type="button"]:hover,
   width: 100%;
   margin-top: 10px;
   border-radius: 10px;
+}
+
+.popup label {
+  display: inline-block;
+  margin-top: 10px;
 }
 
 .overlay {
