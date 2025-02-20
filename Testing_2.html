@@ -1,228 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stellenbosch Ultimate Frisbee</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDL Score Sheet</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <img src="logo.png" alt="Maties Ultimate Frisbee Logo" class="logo">
-            <h1>Stellenbosch Ultimate Frisbee</h1>
-        </header>
-
-        <div class="team-selection">
-            <div class="row">
-                <label>Team A</label>
-                <select id="teamA">
-                    <option>Dagbreek</option>
-                    <option>Helderberg</option>
-                    <option>Matie</option>
-                </select>
-            </div>
-            <div class="row">
-                <label>Team B</label>
-                <select id="teamB">
-                    <option>Dagbreek</option>
-                    <option>Helderberg</option>
-                    <option>Matie</option>
-                </select>
-            </div>
-            <div class="row">
-                <label>Time</label>
-                <input type="text" id="time" readonly>
-            </div>
-        </div>
-
-        <div class="scoreboard">
-            <div class="score-row">
-                <span>Score A</span>
-                <span>Assist A</span>
-                <span>Total</span>
-                <span>Score B</span>
-                <span>Assist B</span>
-            </div>
-        </div>
-
-        <div class="buttons">
-            <button class="btn">Add Score for Team A</button>
-            <button class="btn">Add Score for Team B</button>
-        </div>
-
-        <div class="players-container">
-            <div class="team-players">
-                <h3>Team A Players</h3>
-                <div class="players-list">
-                    Auys <br> Hugo <br> John W <br> Lui <br> Mattheas <br> Theo <br> Thomas
-                </div>
-            </div>
-            <div class="team-players">
-                <h3>Team B Players</h3>
-                <div class="players-list">
-                    Auys <br> Hugo <br> John W <br> Lui <br> Mattheas <br> Theo <br> Thomas
-                </div>
-            </div>
-        </div>
-
-        <div class="submit-section">
-            <button class="submit-btn">Submit</button>
-        </div>
+  <div class="form-container">
+    <div class="logo-title-container">
+      <img src="SU Comm - Portfolio Logo.jpg" alt="Stellenbosch University Logo" class="logo">
+      <h2>Stellenbosch Ultimate Frisbee (T_1)</h2>
     </div>
-
-    <script src="script.js"></script>
+    <form id="scoreForm">
+      <table>
+        <tr>
+          <th>Team A</th>
+          <td><select id="teamA" required><option value="">Select Team A</option></select></td>
+        </tr>
+        <tr>
+          <th>Team B</th>
+          <td><select id="teamB" required><option value="">Select Team B</option></select></td>
+        </tr>
+        <tr>
+          <th>Time</th>
+          <td><input type="text" id="time" readonly></td>
+        </tr>
+      </table>
+      <table>
+        <tr>
+          <th>Score A</th><th>Assist A</th><th>Total</th><th>Score B</th><th>Assist B</th><th>Action</th>
+        </tr>
+        <tbody id="scoringTableBody"></tbody>
+      </table>
+      <div class="add-score-buttons">
+        <button type="button" class="add-score taller-button" onclick="openPopup('A')">Add Score for Team A</button>
+        <button type="button" class="add-score" onclick="openPopup('B')">Add Score for Team B</button>
+      </div>
+      <div class="team-list-container">
+        <div>
+          <h3>Team A Players</h3>
+          <textarea id="teamAList" readonly></textarea>
+        </div>
+        <div>
+          <h3>Team B Players</h3>
+          <textarea id="teamBList" readonly></textarea>
+        </div>
+      </div>
+      <input type="button" value="Submit" onclick="submitScore()">
+    </form>
+  </div>
+  <div id="successMessage" style="display: none;">Data has been successfully exported</div>
+  <div id="loggedDataContainer" style="display: none;">
+    <h3>Logged Data</h3>
+    <table id="loggedDataTable">
+      <thead>
+        <tr>
+          <th>GameID</th><th>Time</th><th>Team</th><th>Score</th><th>Assist</th>
+        </tr>
+      </thead>
+      <tbody id="loggedDataBody"></tbody>
+    </table>
+  </div>
+  <div class="overlay" id="overlay"></div>
+  <div class="popup" id="scorePopup">
+    <button type="button" onclick="closePopup()" class="close-btn" style="position: absolute; top: 10px; right: 10px; font-size: 20px; font-weight: bold; border: none; background: none; cursor: pointer;">&times;</button>
+    <h3 id="popupTitle">Add Score</h3>
+    <select id="scorer" required><option value="">Select Scorer</option></select>
+    <select id="assist" required><option value="">Select Assist</option></select>
+    <input type="button" id="confirmScoreBtn" value="Add Score" onclick="confirmScore()">
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
-
-/* Global styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4e8e1;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-}
-
-.container {
-    width: 70%;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    border: 3px solid #5a2328;
-}
-
-/* Header */
-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.logo {
-    width: 80px;
-}
-
-h1 {
-    color: #5a2328;
-}
-
-/* Team Selection */
-.team-selection {
-    border: 2px solid #5a2328;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-.row {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px;
-}
-
-label {
-    font-weight: bold;
-    color: #5a2328;
-}
-
-select, input {
-    width: 60%;
-    padding: 5px;
-    border: 1px solid #5a2328;
-    border-radius: 5px;
-}
-
-/* Scoreboard */
-.scoreboard {
-    background-color: #f2dfd7;
-    padding: 10px;
-    text-align: center;
-    font-weight: bold;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-.score-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px;
-    font-size: 18px;
-}
-
-/* Buttons */
-.buttons {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 10px;
-}
-
-.btn {
-    background-color: #5a2328;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 45%;
-}
-
-.btn:hover {
-    background-color: #842b32;
-}
-
-/* Players Section */
-.players-container {
-    display: flex;
-    justify-content: space-around;
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.team-players {
-    width: 45%;
-    border: 2px solid #5a2328;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-h3 {
-    color: #5a2328;
-}
-
-.players-list {
-    text-align: left;
-    padding: 10px;
-}
-
-/* Submit Button */
-.submit-section {
-    text-align: center;
-}
-
-.submit-btn {
-    background-color: #5a2328;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.submit-btn:hover {
-    background-color: #842b32;
-}
-
-// Function to update time dynamically
-function updateTime() {
-    const timeInput = document.getElementById('time');
-    const now = new Date();
-    const formattedTime = now.toLocaleDateString('en-GB') + ", " + now.toLocaleTimeString();
-    timeInput.value = formattedTime;
-}
-
-// Update time every second
-setInterval(updateTime, 1000);
-updateTime();

@@ -27,7 +27,9 @@ async function fetchTeams() {
   } else {
     // If not, fetch from the server
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec');
+      const response = await fetch(
+        'https://script.google.com/macros/s/AKfycbz7Dt-au2pT1VoHY0aclvtxyRxBR2tig6kp_R7Cw9Gij9_U6D3h_YaI4fo55VLbzXaS/exec'
+      );
       const teams = await response.json();
       teamsData = teams; // Cache the teams data globally
       sessionStorage.setItem('teams', JSON.stringify(teams)); // Store in sessionStorage for future use
@@ -42,6 +44,7 @@ async function fetchTeams() {
 function populateTeamOptions(teams) {
   const teamASelect = document.getElementById('teamA');
   const teamBSelect = document.getElementById('teamB');
+
   // Get unique team names using a Set
   const uniqueTeams = [...new Set(teams.map(item => item.teamA))];
 
@@ -88,7 +91,7 @@ function updatePlayerList(team) {
 
   // Adjust the height of the textarea to fit the content
   playerListElement.style.height = 'auto';
-  playerListElement.style.height = (playerListElement.scrollHeight) + 'px';
+  playerListElement.style.height = playerListElement.scrollHeight + 'px';
 }
 
 /**
@@ -111,7 +114,9 @@ function openPopup(team, rowIndex) {
   assistDropdown.innerHTML = '<option value="">Select Assist</option>';
 
   // Get the list of players for the selected team
-  const playersText = document.getElementById(team === 'A' ? 'teamAList' : 'teamBList').value;
+  const playersText = document.getElementById(
+    team === 'A' ? 'teamAList' : 'teamBList'
+  ).value;
   const players = playersText ? playersText.split('\n') : [];
 
   // Create document fragments for efficient DOM updates
@@ -257,8 +262,8 @@ function updateScoreRow() {
     row.cells[3].textContent = '';     // Score B cell
     row.cells[4].textContent = '';     // Assist B cell
   } else {
-    row.cells[0].textContent = '';     
-    row.cells[1].textContent = '';     
+    row.cells[0].textContent = '';
+    row.cells[1].textContent = '';
     // cells[2] is the total
     row.cells[3].textContent = scorer; // Score B cell
     row.cells[4].textContent = assist; // Assist B cell
@@ -284,9 +289,9 @@ function updateScoreLogs(row) {
   const gameID = `${teamAName} vs ${teamBName}`;
 
   // We'll simply create a new log entry to replace the old one with matching
-  // "team" and the same position in the logs. 
+  // "team" and the same position in the logs.
   // A more robust approach might track timestamps/IDs. This is a simple approach.
-  
+
   // The old log is the same index as this row in the table if you always
   // add logs in order. If the user has many rows, you may need a more reliable
   // way to match them. For simplicity, let's just remove the old entry and add a new one.
